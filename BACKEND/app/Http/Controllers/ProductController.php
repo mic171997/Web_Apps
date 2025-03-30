@@ -66,4 +66,24 @@ class ProductController extends Controller
         ]);
     }
 
+    public function delete_product(Request $request) {
+
+        $id= $request->id;
+        
+        $product = Product::find($id);
+        
+        if (!$product) {
+            return response()->json(['message' => 'Product not found'], 404);
+        }
+    
+        // Delete image file if exists
+        if ($product->image_path && Storage::exists("public/{$product->image_path}")) {
+            Storage::delete("public/{$product->image_path}");
+        }
+    
+        $product->delete();
+    
+        return response()->json(['message' => 'Product deleted successfully']);
+    }
+
 }

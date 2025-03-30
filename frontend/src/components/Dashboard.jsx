@@ -2,7 +2,7 @@ import React from "react";
 import { Container , Table , Form , Button , Pagination} from "react-bootstrap";
 import  { useEffect, useState } from "react";
 import axios from "axios";
-import { computeHeadingLevel } from "@testing-library/dom";
+import Swal from "sweetalert2";
 
 const Dashboard = () => {
 
@@ -41,6 +41,42 @@ const Dashboard = () => {
         }
     };
 
+    const handleDelete = async (id) => {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Yes, delete it!"
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    await axios.delete(`http://127.0.0.1:8000/api/delete_product?id=${id}`);
+                    
+                    Swal.fire({
+                        title: "Deleted!",
+                        text: "The product has been deleted.",
+                        icon: "success",
+                        timer: 2000, 
+                        showConfirmButton: false
+                    });
+    
+                    fetchProducts(currentPage); 
+                } catch (error) {
+                    console.error("Error deleting product:", error);
+    
+                    Swal.fire({
+                        title: "Error!",
+                        text: "Failed to delete product.",
+                        icon: "error"
+                    });
+                }
+            }
+        });
+    };
+
 
   return (
          <Container className="d-flex justify-content-center align-items-start vh-100" style={{ marginTop: "20px" }}>
@@ -73,7 +109,13 @@ const Dashboard = () => {
                   <td>{product.itemcode}</td>
                   <td>{product.productname}</td>
                   <td>${parseFloat(product.price).toFixed(2)}</td>
-                  <td style={{textAlign: "center"}}><Button variant="info" size="xs" >Update</Button> <Button variant="danger" size="xs" >Delete</Button></td>
+                  <td style={{textAlign: "center"}}><Button variant="info" size="xs" >Update</Button> <Button 
+                        variant="danger" 
+                        size="sm" 
+                        onClick={() => handleDelete(product.id)}
+                    >
+                        Delete
+                    </Button></td>
                 </tr>
               ))
             ) : (
