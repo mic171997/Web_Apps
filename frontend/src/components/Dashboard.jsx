@@ -68,8 +68,8 @@ const Dashboard = () => {
             {products.length > 0 ? (
               products.map((product, index) => (
                 <tr key={product.id}>
-                     <td><img src={`http://127.0.0.1:8000/storage/${product.image_path}`} alt="Product" width="50" /></td>
                   <td>{index + 1}</td>
+                  <td><img src={`http://127.0.0.1:8000/storage/${product.image_path}`} alt="Product" width="100" height="70" /></td>
                   <td>{product.itemcode}</td>
                   <td>{product.productname}</td>
                   <td>${parseFloat(product.price).toFixed(2)}</td>
@@ -78,7 +78,7 @@ const Dashboard = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="4" className="text-center">
+                <td colSpan="6" className="text-center">
                   No products found.
                 </td>
               </tr>
