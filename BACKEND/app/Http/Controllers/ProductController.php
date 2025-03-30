@@ -50,4 +50,20 @@ class ProductController extends Controller
     
     }
 
+    public function get_products(Request $request) {
+        $perPage = (int) $request->input('perPage', 2);
+        $search = $request->input('search');
+
+        $products = Product::when(!empty($search), function ($query) use ($search) {
+            $query->where('productname', 'like', "%{$search}%")
+                  ->orWhere('itemcode', 'like', "%{$search}%");})->paginate($perPage);
+       
+
+        return response()->json([
+            'data' => $products->items(),
+            'currentPage' => $products->currentPage(),
+            'totalPages' => $products->lastPage(),
+        ]);
+    }
+
 }
