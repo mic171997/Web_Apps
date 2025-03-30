@@ -51,7 +51,7 @@ class ProductController extends Controller
     }
 
     public function get_products(Request $request) {
-        $perPage = (int) $request->input('perPage', 2);
+        $perPage = (int) $request->input('perPage', 10);
         $search = $request->input('search');
 
         $products = Product::when(!empty($search), function ($query) use ($search) {

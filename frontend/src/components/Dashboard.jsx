@@ -12,7 +12,7 @@ const Dashboard = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const navigate = useNavigate();
-    const perPage = 2; 
+    const perPage = 10; 
     
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
