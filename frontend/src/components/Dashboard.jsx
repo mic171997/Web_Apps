@@ -2,6 +2,7 @@ import React from "react";
 import { Container , Table , Form , Button , Pagination} from "react-bootstrap";
 import  { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const Dashboard = () => {
@@ -10,6 +11,7 @@ const Dashboard = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+    const navigate = useNavigate();
     const perPage = 2; 
     
     useEffect(() => {
@@ -77,6 +79,10 @@ const Dashboard = () => {
         });
     };
 
+    const handleEdit = (product) => {
+        navigate("/add", { state: { product } }); // Pass product data to Add.jsx
+    };
+
 
   return (
          <Container className="d-flex justify-content-center align-items-start vh-100" style={{ marginTop: "20px" }}>
@@ -92,7 +98,6 @@ const Dashboard = () => {
              <Table striped bordered hover>
           <thead>
             <tr>
-              <th>Item #</th>
               <th>Image</th>
               <th>Item Code</th>
               <th>Product Name</th>
@@ -104,12 +109,17 @@ const Dashboard = () => {
             {products.length > 0 ? (
               products.map((product, index) => (
                 <tr key={product.id}>
-                  <td>{index + 1}</td>
                   <td><img src={`http://127.0.0.1:8000/storage/${product.image_path}`} alt="Product" width="100" height="70" /></td>
                   <td>{product.itemcode}</td>
                   <td>{product.productname}</td>
-                  <td>${parseFloat(product.price).toFixed(2)}</td>
-                  <td style={{textAlign: "center"}}><Button variant="info" size="xs" >Update</Button> <Button 
+                  <td>${parseFloat(product.price).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                  <td style={{textAlign: "center"}}><Button 
+                        variant="warning" 
+                        size="sm" 
+                        onClick={() => handleEdit(product)}
+                    >
+                        Edit
+                    </Button> <Button 
                         variant="danger" 
                         size="sm" 
                         onClick={() => handleDelete(product.id)}

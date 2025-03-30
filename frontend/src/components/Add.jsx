@@ -2,15 +2,23 @@ import { Container, Form ,Button, Image } from "react-bootstrap";
 import React, { useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { useLocation } from "react-router-dom";
 
 function TextControlsExample() {
 
-    const [image, setImage] = useState(null);
-    const [preview, setPreview] = useState(null);
-    const [itemcode, setItemcode] = useState("");
-    const [productname, setProductname] = useState("");
-    const [price, setPrice] = useState("");
-    const [rawPrice, setRawPrice] = useState("");
+  const location = useLocation();
+  const productData = location.state?.product || null;
+  
+  const [itemcode, setItemcode] = useState(productData ? productData.itemcode : "");
+  const [productname, setProductname] = useState(productData ? productData.productname : "");
+  const [price, setPrice] = useState(productData ? productData.price : "");
+  const [image, setImage] = useState(null);
+  const [preview, setPreview] = useState(productData ? `http://127.0.0.1:8000/storage/${productData.image_path}` : null);
+  const [rawPrice, setRawPrice] = useState(productData ? productData.price : "");
+  const [selectedProduct, setselectedProduct] = useState(productData ? productData.id : "");
+
+
+    
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -19,32 +27,41 @@ function TextControlsExample() {
   };
 
   const handleUpload = async () => {
-    if (!image) {
-      alert("Please select an image first.");
-      return;
-    }
-
+    
     const formData = new FormData();
     formData.append("image", image);
     formData.append("itemcode", itemcode);
     formData.append("productname", productname);
     formData.append("rawPrice", rawPrice);
+
+    Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: productData ? "Yes Update it" : "Yes Add Product"
+            }).then(async (result) => {
+                if (result.isConfirmed) {
  
      try{
-                const response = await fetch("http://127.0.0.1:8000/api/addproduct", {
-                    method: "POST",
-                    headers: {
-                        "Accept": "application/json", 
-                      },
-                    body: formData,
-                });
-    
-                const responseData = await response.json();
+                      const url = productData
+                      ? `http://127.0.0.1:8000/api/update_product?id=${productData.id}`
+                      : "http://127.0.0.1:8000/api/addproduct";
+
+                  const response = await fetch(url, {
+                      method: "POST",
+                      headers: { "Accept": "application/json" },
+                      body: formData,
+                  });
+
+                  const responseData = await response.json();
                 if (responseData.status === "success") {
                     Swal.fire({
-                        icon: "success",
-                        title: "Success",
-                        text: responseData.message,
+                      icon: responseData.status === "success" ? "success" : "error",
+                      title: responseData.status === "success" ? "Success" : "Error",
+                      text: responseData.message || (productData ? "Update failed." : "Adding failed."),
                     })
                     setItemcode("");
                     setProductname("");
@@ -76,6 +93,9 @@ function TextControlsExample() {
                     text: "An error occurred during adding.",
                 });
             }
+          
+        }
+      });
   };
 
   
@@ -128,8 +148,8 @@ function TextControlsExample() {
           </div>
         )}
 
-        <Button variant="primary" onClick={handleUpload} className="w-100">
-          Add Products
+        <Button variant={selectedProduct ? "primary" : "success"} onClick={handleUpload} className="w-100">
+        {selectedProduct ? "Update Product" : "Add Product"}
         </Button>
  
      

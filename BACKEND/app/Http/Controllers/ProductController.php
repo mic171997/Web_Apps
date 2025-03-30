@@ -69,7 +69,7 @@ class ProductController extends Controller
     public function delete_product(Request $request) {
 
         $id= $request->id;
-        
+
         $product = Product::find($id);
         
         if (!$product) {
@@ -84,6 +84,45 @@ class ProductController extends Controller
         $product->delete();
     
         return response()->json(['message' => 'Product deleted successfully']);
+    }
+
+    public function update_product(Request $request) {
+
+        $id = $request->id;
+
+        $product = Product::find($id);
+        if (!$product) {
+            return response()->json(['status' => 'error', 'message' => 'Product not found.'], 404);
+        }
+
+        $request->validate([
+            'itemcode' => 'required|string',
+            'productname' => 'required|string',
+            'rawPrice' => 'required|numeric',
+        ]);
+
+    
+            if ($request->hasFile('image')) {
+                if ($product->image_path) {
+                    Storage::disk('public')->delete($product->image_path);
+                }
+                $imagePath = $request->file('image')->store('products', 'public');
+                $product->image_path = $imagePath;
+            }
+    
+            $product->where('id' ,  $id)
+            ->update([
+                'itemcode' => $request->itemcode,
+                'productname' => $request->productname,
+                'price' => $request->rawPrice,
+                'image_path' => $request->hasFile('image') ? $imagePath : $product->image_path,
+            ]);
+    
+            return response()->json(['status' => 'success', 'message' => 'Product updated successfully!', 'product' => $product]);
+        
+
+       
+
     }
 
 }
