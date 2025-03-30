@@ -61,7 +61,7 @@ const Layout = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return null;
   }
 
   return (
@@ -72,14 +72,14 @@ const Layout = () => {
             <Navbar.Toggle />
             <Navbar.Brand style={{ color: "#ffffff" }}>Welcome: {userDetails.name}</Navbar.Brand>
             <Navbar.Collapse className="justify-content-end">
-              <Nav.Item>
-                <NavLink to="/add" className="nav-link" style={{ color: "#ffffff", marginRight: "40px" }}>
-                  Add Products
+            <Nav.Item>
+                <NavLink to="/dashboard" className="nav-link" style={{ color: "#ffffff", marginRight: "40px" }}>
+                  View Products
                 </NavLink>
               </Nav.Item>
               <Nav.Item>
-                <NavLink to="/dashboard" className="nav-link" style={{ color: "#ffffff", marginRight: "40px" }}>
-                  Dashboard
+                <NavLink to="/add" className="nav-link" style={{ color: "#ffffff", marginRight: "40px" }}>
+                  Add Products
                 </NavLink>
               </Nav.Item>
               <Button variant="danger" size="sm" onClick={handleLogout}>Log Out</Button>
