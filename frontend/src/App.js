@@ -5,11 +5,12 @@ import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import Index from './components/Index';
 
+
 function App() {
   return (
     <div className="App">
         <Routes>
-          <Route path='/' element={<Index />} />
+          <Route path='/' element={<Login />} />
           <Route path='/register' element={<Register />} />
           <Route path='/login' element={<Login />} />
           <Route path='/dashboard' element={<Dashboard />} />

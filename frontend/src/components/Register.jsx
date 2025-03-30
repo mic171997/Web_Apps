@@ -1,6 +1,7 @@
 import { computeHeadingLevel } from "@testing-library/dom";
 import React, { useState } from "react";
 import Swal from "sweetalert2";
+import { Link } from "react-router-dom";
 
 const Register = () => {
     const [formdata, setFormData] = useState({
@@ -87,8 +88,7 @@ const Register = () => {
                                         </div>
                                         
                                     </form>
-                                    <p className="text-center text-muted mt-5 mb-0">Have already an account? <a href="/login"
-                                        className="fw-bold text-body"><u>Login here</u></a></p>
+                                    <p className="text-center text-muted mt-5 mb-0">Have already an account? <Link to="/login">Login Here</Link></p>
                                 </div>
                             </div>
                         </div>

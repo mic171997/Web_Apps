@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { Link } from "react-router-dom";
 
 const Login = () =>{
     const navigate = useNavigate();
@@ -80,8 +81,7 @@ const Login = () =>{
                                         <button type="submit" className="btn btn-primary mt-4">Submit</button>
                                     </form>
                                     
-                                    <p className="text-center text-muted mt-5 mb-0">Not an account? <a href="/register"
-                                        className="fw-bold text-body"><u>Register here</u></a></p>
+                                    <p className="text-center text-muted mt-5 mb-0">Not an account? <Link to="/register">Register Here</Link></p>
                                 </div>
                             </div>
                         </div>
